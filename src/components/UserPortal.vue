@@ -139,13 +139,10 @@ export default {
         to_account: "",
     },
     createAccountForm: {
-        id: '',
         name: '',
-        account_number: '',
         balance: '',
         currency: '',
         country: '',
-        status: ''
     },
     editAccountForm: {
       id: "",
@@ -168,6 +165,17 @@ export default {
     logout() {
       localStorage.removeItem("authToken");
       this.$router.push("/login");
+    },
+
+    // Ensure accounts are loaded before opening the transaction modal
+    openTransactionModal() {
+      if (!this.accounts || this.accounts.length === 0) {
+        this.message = "Please wait, accounts are still loading.";
+        this.showMessage = true;
+        setTimeout(() => (this.showMessage = false), 3000);
+        return;
+      }
+      this.$refs.transactionModal.show();
     },
     
     //GET functions
@@ -306,7 +314,21 @@ export default {
   // Handle submit event for creating a transaction
   onSubmitTransaction(e) {
     e.preventDefault();
-    this.$refs.addTransactionModal.hide();
+    if (this.createTransactionForm.amount <= 0) {
+      alert("Transaction amount must be positive.");
+      return;
+    }
+    if (this.createTransactionForm.from_account === this.createTransactionForm.to_account) {
+      alert("The source and destination accounts must be different.");
+      return;
+    }
+    const currencyRegex = /^[€$¥£₹₩₽]+$/; // Matches currency symbols
+    if (!currencyRegex.test(this.createTransactionForm.currency)) {
+      alert("Please enter a valid currency symbol (e.g., $, €, ¥, £).");
+      return;
+    }
+
+    this.$refs.TransactionModal.hide();
     const payload = {
       amount: this.createTransactionForm.amount,
       currency: this.createTransactionForm.currency,
@@ -320,6 +342,21 @@ export default {
   // Handle submit event for creating an account
   onSubmitAccount(e) {
     e.preventDefault();
+    if (this.createAccountForm.balance < 0) {
+      alert("Balance must be a positive value.");
+      return;
+    }
+    const currencyRegex = /^[€$¥£₹₩₽]+$/; // Matches currency symbols
+    if (!currencyRegex.test(this.createAccountForm.currency)) {
+      alert("Please enter a valid currency symbol (e.g., $, €, ¥, £).");
+      return;
+    }
+    if (this.editAccountForm.name.length > 20) {
+      alert("Account name must not exceed 20 characters.");
+      return;
+    }
+
+
     this.$refs.accountModal.hide();
     const payload = {
       name: this.createAccountForm.name,
