@@ -37,13 +37,16 @@ import axios from 'axios';
 export default {
   data() {
     return {
+      id: '',
       username: '', // User's username
       email: '', // User's email
-      password: '', // User's password
-      confirmPassword: '', // User's password confirmation
-      country: '', // User's country
-      date_of_birth: '', // User's date of birth
+      country: '', // User's password
+      state: '',
+      date_of_birth: '', // User's password confirmation
+      role: '', // User's country
+      status: '', // User's date of birth
     };
+
   },
   methods: {
     handleRegister() {
@@ -61,18 +64,19 @@ export default {
 
       // Prepare the payload with form data
       const payload = {
-        name: this.username, // User's name
+        username: this.username, // User's name
         email: this.email, // User's email
         password: this.password, // User's password
         country: this.country, // User's country
         date_of_birth: this.date_of_birth, // User's date of birth
       };
+      console.log(payload)
 
       axios
         .post(path, payload) // Send POST request with the payload
         .then((response) => {
           console.log("Registration successful:", response.data);
-          alert(`Welcome, ${response.data.name}! Registration successful.`);
+          alert(`Welcome, ${response.data.username}! Registration successful.`);
           this.$router.push("/login"); // Redirect to the login page
         })
         .catch((error) => {
@@ -98,7 +102,7 @@ color: #fff;
 
 h2 {
 font-size: 48px;
-background: -webkit-linear-gradient(right, #1b5305, #051d52);
+background-color: #ffffff;
 -webkit-background-clip: text;
 background-clip: text;
 -webkit-text-fill-color: transparent;

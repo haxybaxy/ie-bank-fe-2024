@@ -25,8 +25,14 @@ import axios from "axios";
 export default {
   data() {
     return {
-      username: "", // Stores the username input
-      password: "", // Stores the password input
+      id: '',
+      username: '', // User's username
+      email: '', // User's email
+      country: '', // User's password
+      state: '',
+      date_of_birth: '', // User's password confirmation
+      role: '', // User's country
+      status: '', // User's date of birth
     };
   },
   methods: {
@@ -36,6 +42,7 @@ export default {
       const payload = { username, password };
 
       axios
+        console.log(path)
         .post(path, payload)
         .then((response) => {
           // Handle successful login
@@ -44,6 +51,7 @@ export default {
 
           // Store user info or token if required
           localStorage.setItem("authToken", response.data.token || ""); // Example: Store token
+          console.log(response)
 
           // Redirect based on role (optional)
           if (response.data.role === "admin") {
@@ -85,7 +93,7 @@ export default {
 
 h2 {
   font-size: 48px;
-  background: -webkit-linear-gradient(right, #1b5305, #051d52);
+  background-color: #ffffff;
   -webkit-background-clip: text;
   background-clip: text;
   -webkit-text-fill-color: transparent;
@@ -93,7 +101,7 @@ h2 {
 }
 
 p {
-  color: #e0e0e0;
+  color: #ffffff;
   margin-bottom: 20px;
 }
 
